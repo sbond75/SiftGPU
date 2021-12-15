@@ -55,7 +55,7 @@ SRC_SIFTGPU = src/SiftGPU
 SRC_DRIVER = src/TestWin
 SRC_SERVER = src/ServerSiftGPU
 CC = g++
-CFLAGS = -I$(INC_DIR) -fPIC  -L/usr/lib -L./bin -L./lib -Wall -Wno-deprecated -pthread  
+CFLAGS = -I$(INC_DIR) -fPIC  -L/usr/lib -L./bin -L./lib -Wall -Wno-deprecated -pthread  -g
 
 #simple hack to repalce the native flat on OSX because gcc version is low
 ifneq ($(DARWIN),) 
@@ -86,12 +86,16 @@ _HEADER_SIFTGPU_LIB = SiftGPU.h
 
 ifneq ($(DARWIN),) 
 #librarys for SiftGPU
-LIBS_SIFTGPU = -lGLEW -framework GLUT -framework OpenGL 
-CFLAGS +=  -L/Users/prb2pal/Development/Resources/lib  
+#LIBS_SIFTGPU = -lGLEW -framework GLUT -framework OpenGL 
+#CFLAGS +=  -L/Users/prb2pal/Development/Resources/lib  
 else
 #librarys for SiftGPU
-LIBS_SIFTGPU = -lGLEW -lglut -lGL -lX11
+#LIBS_SIFTGPU = -lGLEW -lglut -lGL -lX11
 endif
+
+LIBS_SIFTGPU = -lGLEW -lglut -lGL -lX11
+CFLAGS += $(NIX_CFLAGS_COMPILE)
+LIBS_SIFTGPU += $(NIX_LDFLAGS)
  
 ifneq ($(siftgpu_disable_devil), 0)
 	CFLAGS += -DSIFTGPU_NO_DEVIL
@@ -160,8 +164,8 @@ endif
 
 OBJ_SIFTGPU = $(patsubst %,$(ODIR_SIFTGPU)/%,$(_OBJ_SIFTGPU))
 LIBS_DRIVER = $(BIN_DIR)/libsiftgpu.a $(LIBS_SIFTGPU) 
-SRC_TESTWIN = $(SRC_DRIVER)/TestWinGlut.cpp $(SRC_DRIVER)/BasicTestWin.cpp  
-DEP_TESTWIN = $(SRC_DRIVER)/TestWinGlut.h $(SRC_DRIVER)/BasicTestwin.h $(SRC_DRIVER)/GLTransform.h 
+#SRC_TESTWIN = $(SRC_DRIVER)/TestWinGlut.cpp $(SRC_DRIVER)/BasicTestWin.cpp  
+#DEP_TESTWIN = $(SRC_DRIVER)/TestWinGlut.h $(SRC_DRIVER)/BasicTestwin.h $(SRC_DRIVER)/GLTransform.h 
 
 
 
@@ -176,7 +180,7 @@ siftgpu: makepath $(OBJ_SIFTGPU)
 	$(CC) -o $(BIN_DIR)/libsiftgpu.so $(OBJ_SIFTGPU) $(LIBS_SIFTGPU) $(CFLAGS) -shared -fPIC
  
 driver: makepath 
-	$(CC) -o $(BIN_DIR)/TestWinGlut $(SRC_TESTWIN) $(LIBS_DRIVER) $(CFLAGS)
+	#$(CC) -o $(BIN_DIR)/TestWinGlut $(SRC_TESTWIN) $(LIBS_DRIVER) $(CFLAGS)
 	$(CC) -o $(BIN_DIR)/SimpleSIFT $(SRC_DRIVER)/SimpleSIFT.cpp $(LIBS_SIMPLESIFT) $(CFLAGS) 
 	$(CC) -o $(BIN_DIR)/speed $(SRC_DRIVER)/speed.cpp $(LIBS_DRIVER) $(CFLAGS) 
 	$(CC) -o $(BIN_DIR)/MultiThreadSIFT $(SRC_DRIVER)/MultiThreadSIFT.cpp $(LIBS_DRIVER) $(CFLAGS)  -pthread

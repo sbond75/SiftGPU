@@ -193,9 +193,11 @@ int main()
         //this can be used to write your own sift file.            
     }
 
+    #define DIR "."
+    //#define DIR ".."
     //You can have at most one OpenGL-based SiftGPU (per process).
     //Normally, you should just create one, and reuse on all images. 
-    if(sift->RunSIFT("../data/640-1.jpg"))
+    if(sift->RunSIFT(DIR "/data/640-1.jpg"))
     {
         num2 = sift->GetFeatureNum();
         keys2.resize(num2);    descriptors2.resize(128*num2);
@@ -203,9 +205,9 @@ int main()
     }
 
     //Testing code to check how it works when image size varies
-    //sift->RunSIFT("../data/256.jpg");sift->SaveSIFT("../data/256.sift.1");
-    //sift->RunSIFT("../data/1024.jpg"); //this will result in pyramid reallocation
-    //sift->RunSIFT("../data/256.jpg"); sift->SaveSIFT("../data/256.sift.2");
+    //sift->RunSIFT(DIR "/data/256.jpg");sift->SaveSIFT("../data/256.sift.1");
+    //sift->RunSIFT(DIR "/data/1024.jpg"); //this will result in pyramid reallocation
+    //sift->RunSIFT(DIR "/data/256.jpg"); sift->SaveSIFT("../data/256.sift.2");
     //two sets of features for 256.jpg may have different order due to implementation
  
     //*************************************************************************
