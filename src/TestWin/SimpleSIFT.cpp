@@ -32,7 +32,7 @@ using std::iostream;
 ////////////////////////////////////////////////////////////////////////////
 #if !defined(SIFTGPU_STATIC) && !defined(SIFTGPU_DLL_RUNTIME) 
 // SIFTGPU_STATIC comes from compiler
-#define SIFTGPU_DLL_RUNTIME
+//#define SIFTGPU_DLL_RUNTIME
 // Load at runtime if the above macro defined
 // comment the macro above to use static linking
 #endif
@@ -88,7 +88,7 @@ int main()
         void * hsiftgpu = dlopen("libsiftgpu.so", RTLD_LAZY);
     #endif
 
-    if(hsiftgpu == NULL) return 0;
+    if(hsiftgpu == NULL) return 1;
 
     #ifdef REMOTE_SIFTGPU
         ComboSiftGPU* (*pCreateRemoteSiftGPU) (int, char*) = NULL;
@@ -176,7 +176,9 @@ int main()
     //The same context can be used by SiftMatchGPU
     if(sift->CreateContextGL() != SiftGPU::SIFTGPU_FULL_SUPPORTED) return 0;
 
-    if(sift->RunSIFT("../data/800-1.jpg"))
+#define DIR "."
+//#define DIR ".."
+    if(sift->RunSIFT(DIR "/data/800-1.jpg"))
     {
         //Call SaveSIFT to save result to file, the format is the same as Lowe's
         //sift->SaveSIFT("../data/800-1.sift"); //Note that saving ASCII format is slow
@@ -190,11 +192,11 @@ int main()
         //reading back feature vectors is faster than writing files
         //if you dont need keys or descriptors, just put NULLs here
         sift->GetFeatureVector(&keys1[0], &descriptors1[0]);
-        //this can be used to write your own sift file.            
+        //this can be used to write your own sift file.
+    } else {
+      return 1;
     }
 
-    #define DIR "."
-    //#define DIR ".."
     //You can have at most one OpenGL-based SiftGPU (per process).
     //Normally, you should just create one, and reuse on all images. 
     if(sift->RunSIFT(DIR "/data/640-1.jpg"))
@@ -202,12 +204,14 @@ int main()
         num2 = sift->GetFeatureNum();
         keys2.resize(num2);    descriptors2.resize(128*num2);
         sift->GetFeatureVector(&keys2[0], &descriptors2[0]);
+    } else {
+      return 1;
     }
 
     //Testing code to check how it works when image size varies
-    //sift->RunSIFT(DIR "/data/256.jpg");sift->SaveSIFT("../data/256.sift.1");
+    //sift->RunSIFT(DIR "/data/256.jpg");sift->SaveSIFT(DIR "/data/256.sift.1");
     //sift->RunSIFT(DIR "/data/1024.jpg"); //this will result in pyramid reallocation
-    //sift->RunSIFT(DIR "/data/256.jpg"); sift->SaveSIFT("../data/256.sift.2");
+    //sift->RunSIFT(DIR "/data/256.jpg"); sift->SaveSIFT(DIR "/data/256.sift.2");
     //two sets of features for 256.jpg may have different order due to implementation
  
     //*************************************************************************
@@ -216,8 +220,8 @@ int main()
     //Method1, set new keypoints for the image you've just processed with siftgpu
     //say vector<SiftGPU::SiftKeypoint> mykeys;
     //sift->RunSIFT(mykeys.size(), &mykeys[0]); 
-    //sift->RunSIFT(num2, &keys2[0], 1);         sift->SaveSIFT("../data/640-1.sift.2");
-    //sift->RunSIFT(num2, &keys2[0], 0);        sift->SaveSIFT("../data/640-1.sift.3");
+    //sift->RunSIFT(num2, &keys2[0], 1);         sift->SaveSIFT(DIR "/data/640-1.sift.2");
+    //sift->RunSIFT(num2, &keys2[0], 0);        sift->SaveSIFT(DIR "/data/640-1.sift.3");
 
     //Method2, set keypoints for the next coming image
     //The difference of with method 1 is that method 1 skips gaussian filtering
@@ -228,10 +232,10 @@ int main()
     //    mykeys[i].y = (i/10)*10.0f+50.0f;
     //}
     //sift->SetKeypointList(100, mykeys, 0);
-    //sift->RunSIFT("../data/800-1.jpg");                    sift->SaveSIFT("../data/800-1.sift.2");
+    //sift->RunSIFT(DIR "/data/800-1.jpg");                    sift->SaveSIFT(DIR "/data/800-1.sift.2");
     //### for comparing with method1: 
-    //sift->RunSIFT("../data/800-1.jpg"); 
-    //sift->RunSIFT(100, mykeys, 0);                          sift->SaveSIFT("../data/800-1.sift.3");
+    //sift->RunSIFT(DIR "/data/800-1.jpg"); 
+    //sift->RunSIFT(100, mykeys, 0);                          sift->SaveSIFT(DIR "/data/800-1.sift.3");
     //*********************************************************************************
 
 

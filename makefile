@@ -29,7 +29,8 @@ siftgpu_prefer_glut = 1
 siftgpu_disable_devil = 0
 #------------------------------------------------------------------------------------------------
 #whether SimpleSIFT uses runtime loading of libsiftgpu.so or static linking of libsiftgpu.a
-simplesift_runtime_load = 1
+#simplesift_runtime_load = 1
+simplesift_runtime_load = 0
 
 #################################################################
 

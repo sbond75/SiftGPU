@@ -82,9 +82,9 @@ int main(int argc, char * argv[])
 
 	std::cout<<"Initialize and warm up...\n";
 	//create an OpenGL context for computation
-	if(sift.CreateContextGL() ==0) return 0;
+	if(sift.CreateContextGL() ==0) return 1;
 	
-	if(sift.RunSIFT()==0)	return 0;
+	if(sift.RunSIFT()==0)	return 1;
 
 	//image is loaded for only once for this experiment
 #ifndef TEST_MULTI_PROCESS_SIFTGPU
