@@ -41,7 +41,8 @@ public:
                 argv[2] = (char*) display;
             }
 		    glutInit(&argc, argv);
-		    glutInitDisplayMode (GLUT_RGBA ); 
+                    //glutInitDisplayMode (GLUT_RGBA ); 
+		    glutInitDisplayMode (GLUT_RGB ); 
 		    _glut_init_called = 1; 
 	    }
 	    if(x != -1) glutInitWindowPosition(x, y);
