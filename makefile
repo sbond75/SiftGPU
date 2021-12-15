@@ -96,7 +96,7 @@ endif
 
 LIBS_SIFTGPU = -lGLEW -lglut -lGL -lX11
 CFLAGS += $(NIX_CFLAGS_COMPILE)
-LIBS_SIFTGPU += $(NIX_LDFLAGS)
+LIBS_SIFTGPU += `pkg-config --list-all | awk '{print $$1}' | xargs -n 1 pkg-config --libs` #$(NIX_LDFLAGS)
  
 ifneq ($(siftgpu_disable_devil), 0)
 	CFLAGS += -DSIFTGPU_NO_DEVIL
