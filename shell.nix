@@ -20,5 +20,6 @@ mkShell {
     libGL
     freeglut
     libdevil
+  ] ++ (lib.optional (stdenv.hostPlatform.isLinux) [ lldb x11 ]) ++ [
   ];
 }
