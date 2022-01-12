@@ -40,6 +40,8 @@ using namespace std;
 #include "ProgramCL.h"
 #include "PyramidCL.h"
 
+#include <cstring>
+
 
 #define USE_TIMING()		double t, t0, tt;
 #define OCTAVE_START()		if(GlobalUtil::_timingO){	t = t0 = CLOCK();	cout<<"#"<<i+_down_sample_factor<<"\t";	}

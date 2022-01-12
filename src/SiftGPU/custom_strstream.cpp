@@ -8,6 +8,9 @@
 
 #include "custom_strstream.hpp"
 
+#include <cstring>
+#include <climits>
+
 // https://code.woboq.org/gcc/libstdc++-v3/include/std/streambuf.html#49
 #define _IsUnused __attribute__ ((__unused__))
 
