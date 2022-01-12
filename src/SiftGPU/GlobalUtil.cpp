@@ -384,6 +384,10 @@ void GlobalUtil::InitGLParam(int NotTargetGL)
         glewInit();
 
 	    GlobalUtil::_GoodOpenGL = 2;
+        
+        // https://stackoverflow.com/questions/12184506/why-does-glgetstringgl-version-return-null-zero-instead-of-the-opengl-versio/12184590
+        printf("OpenGL version supported by this platform (%s): \n",
+        glGetString(GL_VERSION));
 
 	    const char * vendor = (const char * )glGetString(GL_VENDOR);
 	    if(vendor)
