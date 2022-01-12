@@ -12,10 +12,21 @@
 #define _IsUnused __attribute__ ((__unused__))
 
 // https://en.cppreference.com/w/cpp/io/strstreambuf/strstreambuf
-strstreambuf::strstreambuf(char* __get, std::streamsize __n/*, char* __put = 0*/) throw() :
+strstreambuf::strstreambuf(char* get, std::streamsize n, char* put) throw() :
 basic_streambuf<char, std::char_traits<char> >(),
 _M_out_cur(0)
 {
+    if (get)
+    {
+      size_t N = n > 0 ? size_t(n) : n == 0 ? strlen(get) : size_t(INT_MAX);
+      if (put)
+        {
+          setg(get, get, put);
+          setp(put, put + N);
+        }
+      else
+        setg(get, get, get + N);
+    }
 }
 
 strstreambuf::~strstreambuf() {}
@@ -186,9 +197,12 @@ strstreambuf::underflow()
 //}
 
 // https://en.cppreference.com/w/cpp/io/ostrstream/ostrstream
-ostrstream::ostrstream(char* s, int n/*, ios_base::openmode mode*/) :
-_M_buf(s, n)
-{}
+
+// https://code.woboq.org/gcc/libstdc++-v3/src/c++98/strstream.cc.html
+ostrstream::ostrstream(char* s, int n, ios_base::openmode mode)
+: std::basic_ios<char>(), std::basic_ostream<char>(0),
+  _M_buf(s, n, mode & ios_base::app ? s + strlen(s) : s)
+{ std::basic_ios<char>::init(&_M_buf); }
 
 ostrstream::~ostrstream() {
     // Nothing to do since this memory is managed by the user of this class when constructed with a char* argument ( https://en.cppreference.com/w/cpp/io/ostrstream/~ostrstream ) and we didn't implement the default ctor

@@ -41,8 +41,7 @@ public:
   explicit strstreambuf(std::streamsize __initial_capacity = 0);
   strstreambuf(void* (*__alloc)(size_t), void (*__free)(void*));
 
-  strstreambuf(char* __get, std::streamsize __n/*, char* __put = 0*/ // <-- not yet implemented
-    ) throw ();
+  strstreambuf(char* __get, std::streamsize __n, char* __put = 0) throw ();
   strstreambuf(signed char* __get, std::streamsize __n, signed char* __put = 0) throw ();
   strstreambuf(unsigned char* __get, std::streamsize __n, unsigned char* __put=0) throw ();
 
@@ -104,8 +103,7 @@ class ostrstream : public std::basic_ostream<char>
 {
 public:
   ostrstream() = delete; // Not yet implemented
-  ostrstream(char*, int/*, ios_base::openmode = ios_base::out*/ // <-- mode not yet implemented
-    );
+  ostrstream(char*, int, ios_base::openmode = ios_base::out);
   virtual ~ostrstream();
 
   _GLIBCXX_CONST strstreambuf* rdbuf() const throw ();
