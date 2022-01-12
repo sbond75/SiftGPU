@@ -28,7 +28,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include <strstream>
+#include "custom_strstream.hpp" //#include <strstream>
 #include <algorithm>
 #include <stdlib.h>
 #include <math.h>
