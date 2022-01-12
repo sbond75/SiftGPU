@@ -43,14 +43,18 @@ using namespace std;
 
 #if  defined(_WIN32) 
 	#pragma comment (lib, "OpenCL.lib")
-#endif
 
 #ifndef _INC_WINDOWS
 #ifndef WIN32_LEAN_AND_MEAN
 	#define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
-#endif 
+#endif
+#elif defined(__APPLE__)
+#include <OpenCL/cl_gl_ext.h>
+#include <OpenGL/CGLDevice.h>
+#include <OpenGL/CGLCurrent.h>
+#endif
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -207,10 +211,48 @@ bool ProgramBagCL::InitializeContext()
     //context;
     if(GlobalUtil::_UseSiftGPUEX)
     {
-        cl_context_properties prop[] = {
-        CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
-        CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
-        CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),  0 };
+//        cl_context_properties prop[] = {
+//        CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
+//        CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
+//        CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),  0 };
+        
+        // https://stackoverflow.com/questions/30523956/errors-while-compiling-an-openglopencl-code-on-os-x //
+        #if defined(_WIN32)
+
+            // Windows
+            cl_context_properties prop[] = {
+              CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
+              CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
+              CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
+              0
+            };
+
+        #elif defined(__APPLE__)
+        
+            // OS X
+            #pragma OPENCL EXTENSION CL_APPLE_gl_sharing : enable
+            CGLContextObj     kCGLContext     = CGLGetCurrentContext();
+            CGLShareGroupObj  kCGLShareGroup  = CGLGetShareGroup(kCGLContext);
+
+            const int CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE = 268435456;
+            cl_context_properties prop[] = {
+              CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE,
+              (cl_context_properties) kCGLShareGroup,
+              0
+            };
+
+        #else
+
+            // Linux
+            cl_context_properties prop[] = {
+              CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
+              CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
+              CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
+              0
+            };
+
+        #endif
+        // //
         _context = clCreateContext(prop, 1, &_device, NULL, NULL, &status);    
         if(status != CL_SUCCESS) return false;
     }else
