@@ -380,6 +380,14 @@ void GlobalUtil::InitGLParam(int NotTargetGL)
         GlobalUtil::_GoodOpenGL = 1;
     }else
     {
+#ifdef __linux__
+        int argc = 0;
+        char **argv = nullptr;
+        // https://stackoverflow.com/questions/12184506/why-does-glgetstringgl-version-return-null-zero-instead-of-the-opengl-versio/12184590
+        glutInit(&argc, argv);
+        glutCreateWindow("GLUT");
+#endif
+        
         //first time in this function
         glewInit();
 
