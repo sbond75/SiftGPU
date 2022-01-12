@@ -384,7 +384,11 @@ void GlobalUtil::InitGLParam(int NotTargetGL)
         int argc = 0;
         char **argv = nullptr;
         // https://stackoverflow.com/questions/12184506/why-does-glgetstringgl-version-return-null-zero-instead-of-the-opengl-versio/12184590
+        // TODO: this area seems to fail somewhere with "freeglut  ERROR:  Internal error <FBConfig with necessary capabilities not found> in function fgOpenWindow".
+        // Minimal example is in /home/pi/glfw_opengl_test and https://github.com/VADL-2022/glfw_opengl_test which shows errors. Use export DISPLAY=:0.0 first when running it.
+        puts("Running glutInit, may fail");
         glutInit(&argc, argv);
+        puts("Running glutCreateWindow, may fail");
         glutCreateWindow("GLUT");
 #endif
         
