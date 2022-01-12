@@ -54,6 +54,10 @@ using namespace std;
 #include <OpenCL/cl_gl_ext.h>
 #include <OpenGL/CGLDevice.h>
 #include <OpenGL/CGLCurrent.h>
+#else
+// Linux
+#include <GL/glx.h>
+#include <GL/gl.h>
 #endif
 
 //////////////////////////////////////////////////////////////////////
