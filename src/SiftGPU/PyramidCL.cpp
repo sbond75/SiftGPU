@@ -24,7 +24,7 @@
 
 
 #include "GL/glew.h"
-#include <CL/OpenCL.h>
+#include <CL/opencl.h>
 #include <iostream>
 #include <vector>
 #include <algorithm>

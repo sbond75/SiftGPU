@@ -30,7 +30,7 @@
 using namespace std;
 
 
-#include <CL/OpenCL.h>
+#include <CL/opencl.h>
 #include "CLTexImage.h" 
 #include "ProgramCL.h"
 #include "GlobalUtil.h"
